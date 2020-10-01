@@ -1,10 +1,10 @@
 import {combineReducers, compose, createStore} from "redux";
-import pizzasReducer from "./reducers/pizzas";
-import filtersReducer from "./reducers/filters";
+import pizzas from "./reducers/pizzas";
+import filters from "./reducers/filters";
 
 const rootReducer = combineReducers({
-   pizzasReducer,
-   filtersReducer
+   pizzas,
+   filters
 });
 
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
