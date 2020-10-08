@@ -1,12 +1,11 @@
 import React, {memo, useEffect, useRef, useState} from "react";
 
 // memo следит за изменением пропсов. Ререндер происходит только когда они изменяются.
-const SortPopup = memo(function SortPopup({items}) {
+const SortPopup = memo(function SortPopup({items, activeSortType, onSelectSortType}) {
 
         const [visiblePopup, setVisiblePopup] = useState(false);
-        const [activeItem, setActiveItem] = useState(0);
         const sortRef = useRef(); // в sortRef сохраняется ссылка на блок sort
-        const sortTitle = items[activeItem].name;
+        const sortTitle = items.find((obj) => obj.type === activeSortType).name;
 
         const toggleVisiblePopup = () => {
             setVisiblePopup(!visiblePopup);
@@ -14,13 +13,16 @@ const SortPopup = memo(function SortPopup({items}) {
 
         // выполняется при каждом клике на body
         const handleOutsideClick = (e) => {
-            if (!e.path.includes(sortRef.current)) {
+            const path = e.path || (e.composedPath && e.composedPath());
+            if (!path.includes(sortRef.current)) {
                 setVisiblePopup(false);
             }
         };
 
         const onSelectItem = (index) => {
-            setActiveItem(index);
+            if (onSelectSortType) {
+                onSelectSortType(index);
+            }
             setVisiblePopup(false);
         };
 
@@ -52,8 +54,8 @@ const SortPopup = memo(function SortPopup({items}) {
                 <div className="sort__popup">
                     <ul>
                         {items.map((obj, index) =>
-                            <li className={activeItem === index ? "active" : ""}
-                                onClick={() => onSelectItem(index)}
+                            <li className={activeSortType === obj.type ? "active" : ""}
+                                onClick={() => onSelectItem(obj)}
                                 key={`${obj.type}_${index}`}>
                                 {obj.name}
                             </li>
